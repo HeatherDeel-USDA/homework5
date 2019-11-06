@@ -1,0 +1,13 @@
+---
+title: "R Programming, Homework 5"
+author: "Heather Deel"
+date: "11/6/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## List of files saved in the data directory:
+../data/homicide-data.csv
