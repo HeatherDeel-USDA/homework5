@@ -22,6 +22,11 @@ library(dplyr)
 library(ggplot2)
 ```
 
+# Load in the data
+```{r}
+homicides <- read_csv("../data/homicide-data.csv")
+```
+
 
 
 
