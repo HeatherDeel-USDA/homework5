@@ -1,0 +1,9 @@
+---
+title: "README"
+author: "Heather Deel"
+date: "11/11/2019"
+output: html_document
+---
+
+This is a README file for R Programming, Homework 5.
+This homework works with the Washington Post homicides data and serves to practice using github, and we will also make a figure. 
