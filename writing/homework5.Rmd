@@ -5,10 +5,27 @@ date: "11/6/2019"
 output: html_document
 ---
 
+# Global options
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## List of files saved in the data directory:
-../data/homicide-data.csv
+## Create of figure 
+# Choice 1 - creation of map showing homicides of cities in 
+
+# Read in libraries
+```{r}
+library(readr)
+library(tigris)
+library(forcats)
+library(dplyr)
+library(ggplot2)
+```
+
+
+
+
+
+
+
 
