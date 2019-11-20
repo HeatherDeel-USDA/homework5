@@ -60,7 +60,7 @@ homicides <- sf::st_as_sf(homicides, coords = c("lon", "lat"), crs = 4269)
 ```
 
 ## Figure generation
-```{r, fig.height=8}
+```{r, fig.height=7}
 
 homicides <- homicides %>% 
   mutate(victim_race = fct_infreq(victim_race))
