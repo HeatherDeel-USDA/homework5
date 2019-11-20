@@ -37,15 +37,26 @@ Pick one city in the data. Create a map showing the locations of the homicides i
 # get tx counties
 tx_counties <- counties(state = "TX", cb = TRUE, class = "sf")
 
-# generate list of houston counties and filter texas counties
+# generate list of houston counties
 houston_counties <- c("Austin", "Waller", "Montgomery", "Liberty", "Harris", "Fort Bend", "Brazoria", "Galveston", "Chambers")
 
+# filter to houston counties
 htx_counties <- tx_counties %>% 
   filter(NAME %in% houston_counties)
 
+# filter out lat/lon NAs and change homicides to an sf object
+homicides <- homicides %>% 
+  filter(lat != "NA") %>% 
+  filter(lon != "NA") %>% 
+  gather(key = "key", value = "value") %>% 
+  separate(key, c(""))
+  st_as_sf(homicides, coords = c("lon", "lat")) %>% 
+  st_set_crs()
+
 # plot
-ggplot() +
-  geom_sf(data = htx_counties)
+#ggplot() +
+  #geom_sf(data = htx_counties) +
+  #geom_sf(data = homicides)
 
 ```
 
