@@ -11,55 +11,72 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ## Create of figure 
-# Choice 1 - creation of map showing homicides of cities in 
+## Choice 1 - creation of map showing homicides of cities in 
 
-# Read in libraries
+## Read in libraries
 ```{r}
 library(readr)
 library(sf)
 library(tigris)
+options(tigris_class = "sf")
+options(tigris_use_cache = TRUE)
 library(forcats)
 library(dplyr)
+library(tidyr)
 library(ggplot2)
 ```
 
-# Load in the data and filter to Houston, TX
+## Load in the data and filter to Austin, TX
 ```{r}
 homicides <- read_csv("../data/homicide-data.csv")
 homicides <- homicides %>% 
-  filter(city == "Houston")
+  filter(city == "Denver")
 ```
 
-Pick one city in the data. Create a map showing the locations of the homicides in that city, using the sf framework discussed in class. Use tigris to download boundaries for some sub-city geography (e.g., tracts, block groups, county subdivisions) to show as a layer underneath the points showing homicides. Use different facets for solved versus unsolved homicides and different colors to show the three race groups with the highest number of homicides for that city (you may find the fct_lump function from forcats useful for this).
-
-## Figure generation (choice 1)
+## Load in tx data and filter to houston
 ```{r}
 # get tx counties
-tx_counties <- counties(state = "TX", cb = TRUE, class = "sf")
+co_counties <- counties(state = "CO", cb = TRUE, class = "sf")
 
-# generate list of houston counties
-houston_counties <- c("Austin", "Waller", "Montgomery", "Liberty", "Harris", "Fort Bend", "Brazoria", "Galveston", "Chambers")
+# filter to denver county
+denver_county <- co_counties %>% 
+  filter(NAME == "Denver")
 
-# filter to houston counties
-htx_counties <- tx_counties %>% 
-  filter(NAME %in% houston_counties)
-
-# filter out lat/lon NAs and change homicides to an sf object
-homicides <- homicides %>% 
-  filter(lat != "NA") %>% 
-  filter(lon != "NA") %>% 
-  gather(key = "key", value = "value") %>% 
-  separate(key, c(""))
-  st_as_sf(homicides, coords = c("lon", "lat")) %>% 
-  st_set_crs()
-
-# plot
-#ggplot() +
-  #geom_sf(data = htx_counties) +
-  #geom_sf(data = homicides)
+# tracts
+denver_tracts <- tracts(state = "CO", county = "Denver", cb = TRUE, class = "sf")
 
 ```
 
+## Convert homicides to sf object 
+```{r}
+# filter out lat/lon NAs
+homicides <- homicides %>% 
+  filter(lat != "NA") %>% 
+  filter(lon != "NA")
+  
+# change to an sf object
+homicides <- sf::st_as_sf(homicides, coords = c("lon", "lat"), crs = 4269)
+  
+```
 
+## Figure generation
+```{r, fig.height=8}
+
+homicides <- homicides %>% 
+  mutate(victim_race = fct_infreq(victim_race))
+
+homicides <- homicides %>% 
+  dplyr::mutate(victim_race = forcats::fct_lump(victim_race, n = 3))
+
+# plot
+ggplot() +
+  geom_sf(data = denver_county) +
+  geom_sf(data = denver_tracts) +
+  geom_sf(data = homicides, aes(color = victim_race)) +
+  facet_wrap(~disposition) +
+  theme_classic() +
+  ggtitle("Race of homicides in Denver County sorted by disposition") +
+  labs(color = "Victim Race")
+```
 
 
