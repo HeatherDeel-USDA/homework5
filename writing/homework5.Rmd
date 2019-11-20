@@ -33,7 +33,7 @@ homicides <- homicides %>%
   filter(city == "Denver")
 ```
 
-## Load in tx data and filter to houston
+## Load in co data and filter to denver
 ```{r}
 # get tx counties
 co_counties <- counties(state = "CO", cb = TRUE, class = "sf")
